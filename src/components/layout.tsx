@@ -1,4 +1,5 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Activity,
   LayoutDashboard,
@@ -69,6 +70,35 @@ export function Sidebar() {
   );
 }
 
+export function MobileNav() {
+  const role = useReferralStore((s) => s.role);
+  const items = NAV.filter((n) => n.roles.includes(role));
+
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-sand-200/80 bg-white/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 shadow-soft backdrop-blur-md lg:hidden">
+      <div className="mx-auto flex max-w-2xl items-center gap-1">
+        {items.map(({ to, label, icon: Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              cn(
+                "flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-2 py-2 text-[11px] font-semibold transition-colors",
+                isActive
+                  ? "bg-primary-50 text-primary-700 ring-1 ring-primary-100"
+                  : "text-sand-500 hover:bg-sand-100 hover:text-sand-700"
+              )
+            }
+          >
+            <Icon className="h-5 w-5 shrink-0" />
+            <span className="max-w-full truncate">{label}</span>
+          </NavLink>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
 function StreamingToggle() {
   const streaming = useReferralStore((s) => s.streaming);
   const toggle = useReferralStore((s) => s.toggleStreaming);
@@ -94,47 +124,88 @@ const ROLE_LABEL: Record<Role, string> = {
   patient: "Patient",
 };
 
+const ROLE_SHORT_LABEL: Record<Role, string> = {
+  physician: "Physician",
+  admin: "Admin",
+  patient: "Patient",
+};
+
+const ROLE_HOME: Record<Role, string> = {
+  physician: "/workbench",
+  admin: "/admin",
+  patient: "/patient",
+};
+
 const ROLES: Role[] = ["physician", "admin", "patient"];
 
 export function TopBar() {
   const role = useReferralStore((s) => s.role);
   const setRole = useReferralStore((s) => s.setRole);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const title = pageTitle(location.pathname);
+  const routeRole = roleForExclusivePath(location.pathname);
+
+  useEffect(() => {
+    if (routeRole && role !== routeRole) {
+      setRole(routeRole);
+    }
+  }, [role, routeRole, setRole]);
+
+  const changeRole = (nextRole: Role) => {
+    setRole(nextRole);
+    navigate(ROLE_HOME[nextRole], { replace: true });
+  };
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-sand-200/70 bg-white/70 px-5 py-3.5 backdrop-blur-md sm:px-7">
-      <div>
-        <h1 className="text-base font-bold text-sand-900 sm:text-lg">{title.title}</h1>
-        <p className="hidden text-xs text-sand-400 sm:block">{title.subtitle}</p>
+    <header className="sticky top-0 z-20 flex flex-col gap-3 border-b border-sand-200/70 bg-white/80 px-3 py-3 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-7 sm:py-3.5">
+      <div className="flex min-w-0 items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="truncate text-base font-bold text-sand-900 sm:text-lg">{title.title}</h1>
+          <p className="hidden text-xs text-sand-400 sm:block">{title.subtitle}</p>
+        </div>
+        <RoleBadge role={role} className="sm:hidden" />
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="hidden items-center gap-1 rounded-full bg-sand-100 p-1 sm:flex">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="scroll-soft flex min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-full bg-sand-100 p-1 sm:flex-none">
           {ROLES.map((r) => (
             <button
               key={r}
-              onClick={() => setRole(r)}
+              onClick={() => changeRole(r)}
+              aria-pressed={role === r}
               className={cn(
-                "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                "shrink-0 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-3",
                 role === r
                   ? "bg-white text-lavender-700 shadow-soft"
                   : "text-sand-500 hover:text-sand-700"
               )}
             >
-              {ROLE_LABEL[r]}
+              <span className="sm:hidden">{ROLE_SHORT_LABEL[r]}</span>
+              <span className="hidden sm:inline">{ROLE_LABEL[r]}</span>
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-lavender-50 py-1 pl-1 pr-3 ring-1 ring-lavender-100">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-lavender-500 text-xs font-bold text-white">
-            {role === "physician" ? "Dr" : role === "admin" ? "AD" : "P"}
-          </div>
-          <span className="text-xs font-semibold text-lavender-700">{ROLE_LABEL[role]}</span>
-        </div>
+        <RoleBadge role={role} className="hidden sm:flex" />
       </div>
     </header>
+  );
+}
+
+function RoleBadge({ role, className }: { role: Role; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 rounded-full bg-lavender-50 py-1 pl-1 pr-3 ring-1 ring-lavender-100",
+        className
+      )}
+    >
+      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-lavender-500 text-xs font-bold text-white">
+        {role === "physician" ? "Dr" : role === "admin" ? "AD" : "P"}
+      </div>
+      <span className="text-xs font-semibold text-lavender-700">{ROLE_SHORT_LABEL[role]}</span>
+    </div>
   );
 }
 
@@ -150,4 +221,11 @@ function pageTitle(path: string): { title: string; subtitle: string } {
   if (path.startsWith("/patient"))
     return { title: "My Referrals", subtitle: "Appointment status, prep, and next steps" };
   return { title: "Referral GPS", subtitle: "" };
+}
+
+function roleForExclusivePath(path: string): Role | null {
+  if (path.startsWith("/workbench")) return "physician";
+  if (path.startsWith("/admin")) return "admin";
+  if (path.startsWith("/patient")) return "patient";
+  return null;
 }

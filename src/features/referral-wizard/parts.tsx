@@ -19,7 +19,7 @@ export function StepHeading({
       <div className="mb-1 text-xs font-bold uppercase tracking-wider text-lavender-500">
         {eyebrow}
       </div>
-      <h2 className="text-xl font-extrabold text-sand-900">{title}</h2>
+      <h2 className="text-lg font-extrabold text-sand-900 sm:text-xl">{title}</h2>
       {subtitle && <p className="mt-1 text-sm text-sand-500">{subtitle}</p>}
     </div>
   );
@@ -46,18 +46,24 @@ export function StepNav({
   children?: ReactNode;
 }) {
   return (
-    <div className="mt-6 flex items-center justify-between gap-3 border-t border-sand-200 pt-4">
-      <div>
+    <div className="mt-6 flex flex-col-reverse gap-3 border-t border-sand-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex">
         {!hideBack && (
-          <Button variant="ghost" onClick={onBack}>
+          <Button variant="ghost" onClick={onBack} className="w-full sm:w-auto">
             <ArrowLeft className="h-4 w-4" /> {backLabel}
           </Button>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
         {children}
         {onNext && (
-          <Button variant={nextVariant} onClick={onNext} disabled={nextDisabled} size="lg">
+          <Button
+            variant={nextVariant}
+            onClick={onNext}
+            disabled={nextDisabled}
+            size="lg"
+            className="w-full sm:w-auto"
+          >
             {nextLabel} <ArrowRight className="h-4 w-4" />
           </Button>
         )}
@@ -69,7 +75,7 @@ export function StepNav({
 /** Persistent left-rail patient context. */
 export function PatientContextCard({ patient }: { patient: Patient }) {
   return (
-    <Card className="sticky top-2 space-y-4">
+    <Card className="space-y-4 lg:sticky lg:top-2">
       <div className="flex items-center gap-3">
         <Avatar initials={initials(patient.name)} hue={patient.avatarHue} size={48} />
         <div className="min-w-0">

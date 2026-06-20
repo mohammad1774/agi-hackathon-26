@@ -19,7 +19,7 @@ export function Card({
   className?: string;
   as?: "div" | "section" | "article";
 }) {
-  return <As className={cn("card p-5", className)}>{children}</As>;
+  return <As className={cn("card p-4 sm:p-5", className)}>{children}</As>;
 }
 
 export function SectionTitle({
@@ -34,8 +34,8 @@ export function SectionTitle({
   right?: ReactNode;
 }) {
   return (
-    <div className="mb-4 flex items-end justify-between gap-4">
-      <div>
+    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+      <div className="min-w-0">
         {eyebrow && (
           <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-lavender-500">
             {eyebrow}
@@ -44,7 +44,7 @@ export function SectionTitle({
         <h2 className="text-lg font-bold text-sand-900">{title}</h2>
         {subtitle && <p className="mt-0.5 text-sm text-sand-500">{subtitle}</p>}
       </div>
-      {right}
+      {right && <div className="shrink-0">{right}</div>}
     </div>
   );
 }
@@ -91,7 +91,7 @@ export function Button({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex max-w-full items-center justify-center gap-2 rounded-xl text-center font-semibold leading-tight transition-all disabled:cursor-not-allowed disabled:opacity-50",
         variants[variant],
         sizes[size],
         className
@@ -126,7 +126,7 @@ export function Badge({
   tone?: Tone;
   className?: string;
 }) {
-  return <span className={cn("pill", TONE_CLASSES[tone], className)}>{children}</span>;
+  return <span className={cn("pill max-w-full leading-tight", TONE_CLASSES[tone], className)}>{children}</span>;
 }
 
 /* ----------------------------------------------------------------------------

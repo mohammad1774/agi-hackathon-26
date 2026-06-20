@@ -43,17 +43,17 @@ export default function DashboardPage() {
               We optimise for <span className="font-semibold">time-to-accepted-care</span>, not just
               the shortest wait — and we close the loop after the referral is sent.
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
               <Button
                 variant="primary"
-                className="bg-white !text-lavender-700 hover:bg-white/90"
+                className="w-full bg-white !text-lavender-700 hover:bg-white/90 sm:w-auto"
                 onClick={() => navigate("/workbench")}
               >
                 Open the Workbench <ArrowUpRight className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
-                className="!text-white hover:bg-white/10"
+                className="w-full !text-white hover:bg-white/10 sm:w-auto"
                 onClick={() => navigate("/tracker")}
               >
                 See closed-loop tracking
@@ -128,20 +128,24 @@ export default function DashboardPage() {
             title="Referral survival through the pipeline"
             subtitle="% of referrals still alive at each stage"
           />
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={FUNNEL} barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0ece6" vertical={false} />
-              <XAxis dataKey="stage" tick={{ fontSize: 12, fill: "#857a69" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 12, fill: "#a99d8b" }} axisLine={false} tickLine={false} unit="%" />
-              <Tooltip
-                contentStyle={chartTooltip}
-                cursor={{ fill: "rgba(132,114,238,0.06)" }}
-              />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="baseline" name="Today" fill="#e3ddd4" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="withGps" name="With Referral GPS" fill="#1fb88e" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="scroll-soft -mx-2 overflow-x-auto px-2 pb-2">
+            <div className="min-w-[520px]">
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={FUNNEL} barGap={4}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0ece6" vertical={false} />
+                  <XAxis dataKey="stage" tick={{ fontSize: 12, fill: "#857a69" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 12, fill: "#a99d8b" }} axisLine={false} tickLine={false} unit="%" />
+                  <Tooltip
+                    contentStyle={chartTooltip}
+                    cursor={{ fill: "rgba(132,114,238,0.06)" }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar dataKey="baseline" name="Today" fill="#e3ddd4" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="withGps" name="With Referral GPS" fill="#1fb88e" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </Card>
 
         <Card>
@@ -149,31 +153,35 @@ export default function DashboardPage() {
             title="Wait time vs realistic time-to-accepted-care"
             subtitle="The metric that actually matters (weeks)"
           />
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={TIME_TO_CARE}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0ece6" vertical={false} />
-              <XAxis dataKey="route" tick={{ fontSize: 11, fill: "#857a69" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 12, fill: "#a99d8b" }} axisLine={false} tickLine={false} unit="w" />
-              <Tooltip contentStyle={chartTooltip} />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line
-                type="monotone"
-                dataKey="rawWait"
-                name="Advertised wait"
-                stroke="#bfbcfa"
-                strokeWidth={2.5}
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="realistic"
-                name="Realistic time-to-care"
-                stroke="#7152e0"
-                strokeWidth={2.5}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="scroll-soft -mx-2 overflow-x-auto px-2 pb-2">
+            <div className="min-w-[520px]">
+              <ResponsiveContainer width="100%" height={260}>
+                <LineChart data={TIME_TO_CARE}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0ece6" vertical={false} />
+                  <XAxis dataKey="route" tick={{ fontSize: 11, fill: "#857a69" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 12, fill: "#a99d8b" }} axisLine={false} tickLine={false} unit="w" />
+                  <Tooltip contentStyle={chartTooltip} />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="rawWait"
+                    name="Advertised wait"
+                    stroke="#bfbcfa"
+                    strokeWidth={2.5}
+                    dot={{ r: 4 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="realistic"
+                    name="Realistic time-to-care"
+                    stroke="#7152e0"
+                    strokeWidth={2.5}
+                    dot={{ r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </Card>
       </div>
 
@@ -182,26 +190,30 @@ export default function DashboardPage() {
           title="Referral volume by specialty"
           subtitle="Last 30 days across the practice"
         />
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={VOLUME_BY_SPECIALTY} layout="vertical" margin={{ left: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0ece6" horizontal={false} />
-            <XAxis type="number" tick={{ fontSize: 12, fill: "#a99d8b" }} axisLine={false} tickLine={false} />
-            <YAxis
-              type="category"
-              dataKey="specialty"
-              tick={{ fontSize: 12, fill: "#857a69" }}
-              axisLine={false}
-              tickLine={false}
-              width={90}
-            />
-            <Tooltip contentStyle={chartTooltip} cursor={{ fill: "rgba(31,184,142,0.06)" }} />
-            <Bar dataKey="referrals" radius={[0, 6, 6, 0]}>
-              {VOLUME_BY_SPECIALTY.map((_, i) => (
-                <Cell key={i} fill={i % 2 === 0 ? "#1fb88e" : "#8472ee"} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="scroll-soft -mx-2 overflow-x-auto px-2 pb-2">
+          <div className="min-w-[520px]">
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={VOLUME_BY_SPECIALTY} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0ece6" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 12, fill: "#a99d8b" }} axisLine={false} tickLine={false} />
+                <YAxis
+                  type="category"
+                  dataKey="specialty"
+                  tick={{ fontSize: 12, fill: "#857a69" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={90}
+                />
+                <Tooltip contentStyle={chartTooltip} cursor={{ fill: "rgba(31,184,142,0.06)" }} />
+                <Bar dataKey="referrals" radius={[0, 6, 6, 0]}>
+                  {VOLUME_BY_SPECIALTY.map((_, i) => (
+                    <Cell key={i} fill={i % 2 === 0 ? "#1fb88e" : "#8472ee"} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </Card>
     </div>
   );

@@ -37,7 +37,7 @@ export default function AdminPage() {
           <div className="text-3xl font-extrabold">{escalations.length}</div>
           <div className="text-xs font-semibold">No-response escalations</div>
         </Card>
-        <Card className="bg-primary-50 text-primary-700">
+        <Card className="col-span-2 bg-primary-50 text-primary-700 sm:col-span-1">
           <div className="text-3xl font-extrabold">{referrals.length}</div>
           <div className="text-xs font-semibold">Referrals in flight</div>
         </Card>
@@ -59,9 +59,9 @@ export default function AdminPage() {
           <div className="space-y-3">
             {needsInfo.map((r) => (
               <Card key={r.id}>
-                <div className="mb-3 flex items-center gap-3">
+                <div className="mb-3 flex items-start gap-3">
                   <Avatar initials={initials(r.patientName)} size={40} hue={(r.id.length * 53) % 360} />
-                  <div className="flex-1">
+                  <div className="min-w-0 flex-1">
                     <div className="font-bold text-sand-900">{r.patientName}</div>
                     <div className="text-xs text-sand-400">
                       {r.specialtyLabel} · {r.providerName}
@@ -78,13 +78,13 @@ export default function AdminPage() {
                       <motion.div
                         key={t.id}
                         layout
-                        className="flex items-center justify-between gap-3 rounded-xl bg-sand-50 px-3 py-2.5 ring-1 ring-sand-200"
+                        className="flex flex-col gap-3 rounded-xl bg-sand-50 px-3 py-2.5 ring-1 ring-sand-200 sm:flex-row sm:items-center sm:justify-between"
                       >
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex min-w-0 items-start gap-2.5 sm:items-center">
                           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-lavender-500 ring-1 ring-sand-200">
                             <Icon className="h-4 w-4" />
                           </span>
-                          <div>
+                          <div className="min-w-0">
                             <div className={t.resolved ? "text-sm text-sand-400 line-through" : "text-sm font-semibold text-sand-800"}>
                               {t.label}
                             </div>
@@ -96,6 +96,7 @@ export default function AdminPage() {
                           variant={t.resolved ? "ghost" : "primary"}
                           disabled={t.resolved}
                           onClick={() => resolveGapTask(r.id, t.id)}
+                          className="w-full sm:w-auto"
                         >
                           {t.resolved ? "Done" : "Draft & resolve"}
                         </Button>
@@ -120,11 +121,11 @@ export default function AdminPage() {
         ) : (
           <div className="space-y-3">
             {escalations.map((r) => (
-              <Card key={r.id} className="flex items-center gap-3">
+              <Card key={r.id} className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
                   <Hourglass className="h-5 w-5" />
                 </span>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <div className="font-bold text-sand-900">{r.patientName}</div>
                   <div className="text-xs text-sand-400">
                     {r.providerName} · sent {relativeFromNow(r.createdAt)} · {r.daysWaiting} days waiting
@@ -136,6 +137,7 @@ export default function AdminPage() {
                   onClick={() =>
                     advanceReferral(r.id, "received", "Escalation reminder sent — clinic acknowledged.")
                   }
+                  className="w-full sm:w-auto"
                 >
                   <Send className="h-4 w-4" /> Remind clinic
                 </Button>
@@ -145,7 +147,7 @@ export default function AdminPage() {
         )}
       </div>
 
-      <Card className="flex items-center gap-3 bg-lavender-50 ring-lavender-100">
+      <Card className="flex items-start gap-3 bg-lavender-50 ring-lavender-100">
         <ClipboardList className="h-5 w-5 text-lavender-500" />
         <p className="text-sm text-sand-600">
           Admins clear gaps and chase responses — physicians only see what truly needs a clinical
