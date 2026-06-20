@@ -111,6 +111,7 @@ export function Step6Draft({ patient }: { patient: Patient }) {
           size="lg"
           disabled={!signed}
           onClick={() => sendReferral(rankProvider(provider, readiness.score))}
+          className="w-full sm:w-auto"
         >
           <Send className="h-4 w-4" /> Sign & send referral
         </Button>

@@ -49,9 +49,9 @@ export default function PatientPage() {
 
   return (
     <div className="space-y-5">
-      <Card className="flex items-center gap-3 bg-gradient-to-br from-primary-500 to-lavender-500 text-white">
-        <HeartPulse className="h-7 w-7" />
-        <div>
+      <Card className="flex items-start gap-3 bg-gradient-to-br from-primary-500 to-lavender-500 text-white">
+        <HeartPulse className="h-7 w-7 shrink-0" />
+        <div className="min-w-0">
           <h2 className="text-lg font-extrabold">Your referrals, in plain language</h2>
           <p className="text-sm text-white/80">
             We'll text and email you at every step — no chasing required.
@@ -83,11 +83,11 @@ function PatientReferralCard({ referral }: { referral: Referral }) {
 
   return (
     <Card className="space-y-4">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
           <span
             className={cn(
-              "flex h-11 w-11 items-center justify-center rounded-2xl",
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl",
               meta.tone === "primary"
                 ? "bg-primary-100 text-primary-600"
                 : meta.tone === "warning"
@@ -99,12 +99,12 @@ function PatientReferralCard({ referral }: { referral: Referral }) {
           >
             <Icon className="h-5 w-5" />
           </span>
-          <div>
+          <div className="min-w-0">
             <div className="font-bold text-sand-900">{referral.specialtyLabel.split(" · ")[0]}</div>
             <div className="text-xs text-sand-400">{referral.providerName}</div>
           </div>
         </div>
-        <Badge tone={meta.tone}>{meta.label}</Badge>
+        <Badge tone={meta.tone} className="self-start">{meta.label}</Badge>
       </div>
 
       <p className="rounded-xl bg-sand-50 px-3 py-2 text-sm text-sand-600 ring-1 ring-sand-200">
@@ -115,7 +115,7 @@ function PatientReferralCard({ referral }: { referral: Referral }) {
       <PatientTimeline status={referral.status} />
 
       {referral.status === "scheduled" && (
-        <div className="flex items-center gap-2 rounded-xl bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-700">
+        <div className="flex items-start gap-2 rounded-xl bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-700 sm:items-center">
           <CalendarCheck className="h-4 w-4" /> Estimated time to be seen:{" "}
           {weeksLabel(referral.timeToAcceptedCareWeeks)}
         </div>

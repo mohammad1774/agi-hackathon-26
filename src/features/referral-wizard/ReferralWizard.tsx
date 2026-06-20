@@ -35,8 +35,8 @@ export function ReferralWizard({ patientId }: { patientId: string }) {
 
   return (
     <div className="space-y-5">
-      <Card className="flex items-center gap-4 py-4">
-        <div className="flex-1">
+      <Card className="flex items-center gap-3 py-3 sm:gap-4 sm:py-4">
+        <div className="min-w-0 flex-1">
           <WizardStepper current={step} />
         </div>
         <button
@@ -48,12 +48,12 @@ export function ReferralWizard({ patientId }: { patientId: string }) {
         </button>
       </Card>
 
-      <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
+      <div className="grid gap-4 lg:grid-cols-[260px_1fr] lg:gap-5">
         <div className={step === "sent" ? "hidden lg:block" : ""}>
           <PatientContextCard patient={patient} />
         </div>
 
-        <Card className="min-h-[420px]">
+        <Card className="min-h-[360px] sm:min-h-[420px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}

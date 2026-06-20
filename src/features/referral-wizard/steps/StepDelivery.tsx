@@ -99,7 +99,7 @@ function MethodCard({
         <Badge tone={STATUS_TONE[option.status]} className="text-[10px]">
           {STATUS_LABEL[option.status]}
         </Badge>
-        <Badge tone="neutral" className="ml-auto text-[10px] opacity-70">
+        <Badge tone="neutral" className="text-[10px] opacity-70 sm:ml-auto">
           Demo data
         </Badge>
       </div>
@@ -164,12 +164,12 @@ function MethodCard({
       )}
 
       {/* Action row */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <Button
           variant={selected ? "secondary" : "soft"}
           size="sm"
           onClick={onSelect}
-          className={selected ? "ring-2 ring-lavender-300" : ""}
+          className={cn("w-full sm:w-auto", selected ? "ring-2 ring-lavender-300" : "")}
         >
           {selected ? (
             <>
@@ -182,7 +182,7 @@ function MethodCard({
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="ml-auto flex items-center gap-1 text-xs text-sand-400 hover:text-sand-600"
+          className="flex items-center justify-center gap-1 text-xs text-sand-400 hover:text-sand-600 sm:ml-auto sm:justify-start"
         >
           Generated package
           <ChevronDown
@@ -195,13 +195,13 @@ function MethodCard({
       {expanded && (
         <div className="mt-3 space-y-1 border-t border-sand-100 pt-3">
           {option.generatedForms.map((f) => (
-            <div key={f.name} className="flex items-center gap-2 text-xs text-sand-600">
+            <div key={f.name} className="flex flex-wrap items-center gap-2 text-xs text-sand-600">
               {f.type === "fhir_payload" ? (
                 <FileJson className="h-3.5 w-3.5 shrink-0 text-lavender-400" />
               ) : (
                 <FileText className="h-3.5 w-3.5 shrink-0 text-primary-400" />
               )}
-              <span className="flex-1">{f.name}</span>
+              <span className="min-w-0 flex-1">{f.name}</span>
               <Badge tone="neutral" className="text-[10px]">
                 {f.format}
               </Badge>
@@ -271,7 +271,7 @@ function GeneratedPackagePreview({ option }: { option: ReferralDeliveryOption | 
               ) : (
                 <FileText className="h-3.5 w-3.5 shrink-0 text-primary-500" />
               )}
-              <span className="flex-1 text-sand-700">{f.name}</span>
+              <span className="min-w-[160px] flex-1 text-sand-700">{f.name}</span>
               <Badge tone="neutral" className="text-[10px]">
                 {f.format}
               </Badge>
@@ -293,7 +293,7 @@ function GeneratedPackagePreview({ option }: { option: ReferralDeliveryOption | 
           </div>
           <div className="space-y-1.5">
             {option.attachments.map((a) => (
-              <div key={a.name} className="flex items-center gap-2 text-xs">
+              <div key={a.name} className="flex flex-wrap items-center gap-2 text-xs">
                 <span
                   className={cn(
                     "h-2 w-2 shrink-0 rounded-full",
@@ -304,7 +304,7 @@ function GeneratedPackagePreview({ option }: { option: ReferralDeliveryOption | 
                         : "bg-sand-300"
                   )}
                 />
-                <span className="flex-1 text-sand-700">{a.name}</span>
+                <span className="min-w-[160px] flex-1 text-sand-700">{a.name}</span>
                 <Badge
                   tone={
                     a.status === "attached"
@@ -332,7 +332,7 @@ function GeneratedPackagePreview({ option }: { option: ReferralDeliveryOption | 
           <div className="space-y-2">
             {option.requiredDocuments.map((d) => (
               <div key={d.name} className="text-xs">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge
                     tone={
                       d.status === "available"
@@ -347,11 +347,11 @@ function GeneratedPackagePreview({ option }: { option: ReferralDeliveryOption | 
                   >
                     {d.status}
                   </Badge>
-                  <span className="text-sand-700">{d.name}</span>
+                  <span className="min-w-[140px] flex-1 text-sand-700">{d.name}</span>
                   <SourceChip>{d.source}</SourceChip>
                 </div>
                 {d.actionRequired && (
-                  <p className="mt-0.5 pl-14 text-amber-600">{d.actionRequired}</p>
+                  <p className="mt-1 text-amber-600 sm:pl-14">{d.actionRequired}</p>
                 )}
               </div>
             ))}

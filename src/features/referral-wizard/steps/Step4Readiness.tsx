@@ -129,13 +129,13 @@ function MissingRow({ item, onResolve }: { item: ReadinessItem; onResolve: () =>
     <motion.div
       layout
       exit={{ opacity: 0, x: 12 }}
-      className="flex items-center justify-between gap-3 rounded-xl bg-white px-3.5 py-2.5 ring-1 ring-sand-200"
+      className="flex flex-col gap-3 rounded-xl bg-white px-3.5 py-2.5 ring-1 ring-sand-200 sm:flex-row sm:items-center sm:justify-between"
     >
-      <div className="flex items-center gap-2.5">
+      <div className="flex min-w-0 items-start gap-2.5 sm:items-center">
         <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-50 text-rose-500">
           <Icon className="h-4 w-4" />
         </span>
-        <div>
+        <div className="min-w-0">
           <div className="text-sm font-semibold text-sand-800">{item.doc.label}</div>
           <div className="text-xs text-sand-400 capitalize">{item.doc.actionKind} · +{item.doc.weight}% readiness</div>
         </div>
@@ -151,7 +151,8 @@ function MissingRow({ item, onResolve }: { item: ReadinessItem; onResolve: () =>
           "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
           resolving
             ? "bg-sand-100 text-sand-400"
-            : "bg-primary-500 text-white hover:bg-primary-600"
+            : "bg-primary-500 text-white hover:bg-primary-600",
+          "w-full justify-center sm:w-auto"
         )}
       >
         <Plus className={cn("h-3.5 w-3.5", resolving && "animate-spin")} />
