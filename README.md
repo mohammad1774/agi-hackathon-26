@@ -9,26 +9,63 @@ closed-loop until the patient is actually seen.
 > **pathway and destination before the referral enters the queue**, optimising for
 > **time-to-accepted-care** instead of the shortest advertised wait.
 
-This repo is a dynamic, single-page demo (React + TypeScript) running on dummy
-data and a **simulated AI layer** — no backend or API key required.
+This repo is a full-stack app: a React + TypeScript frontend and a FastAPI
+**Clinical Referral Intelligence** backend (in [`backend/`](backend/)). The frontend
+runs standalone on dummy data and a simulated AI layer, and — when the backend is
+running — the **Draft & Sign** step calls the real API to generate the referral
+letter, gap requisitions, readiness score and pre-send checklist.
 
 ---
 
 ## Quick start
+
+### Frontend only (no backend needed)
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open **http://localhost:5173**.
+Then open **http://localhost:5173**. The Draft step shows an "Offline sample draft"
+badge and uses a local template — the demo never breaks if the API is down.
+
+### Full stack (frontend + live backend)
+
+```bash
+npm install
+npm run backend:install      # pip install -r backend/requirements.txt
+npm run dev:all              # runs the API (:8000) and the web app (:5173) together
+```
+
+The backend runs in **offline LLM mode** with no API key (deterministic local
+drafting). For real GPT-4o-mini drafting, set `OPENAI_API_KEY` (see
+[`backend/.env.example`](backend/.env.example)). The Draft step then shows a
+"Live backend draft" badge.
 
 | Script | What it does |
 | --- | --- |
-| `npm run dev` | Start the Vite dev server (hot reload) |
+| `npm run dev` / `dev:web` | Start the Vite dev server (hot reload) |
+| `npm run dev:api` | Start the FastAPI backend on :8000 |
+| `npm run dev:all` | Run backend + frontend together (via `concurrently`) |
+| `npm run backend:install` | Install backend Python dependencies |
+| `npm run backend:test` | Run the backend smoke tests |
 | `npm run build` | Type-check (`tsc -b`) and build for production |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint |
+
+---
+
+## How the frontend talks to the backend
+
+- The frontend calls a relative base URL `/api` (configurable via
+  `VITE_API_BASE_URL`). In dev, Vite proxies `/api` → `BACKEND_URL`
+  (`http://localhost:8000` by default) — see [`vite.config.ts`](vite.config.ts) and
+  [`.env.example`](.env.example), so there is no CORS setup to manage.
+- The typed client lives in [`src/lib/api.ts`](src/lib/api.ts). It maps the wizard's
+  current patient, chosen pathway, selected destination and attached documents into a
+  `POST /api/draft-package` request and renders the returned `ReferralPackage`.
+- The call is defensive (timeout + typed errors); on any failure it falls back to the
+  local sample draft. See [`backend/README.md`](backend/README.md) for the full API.
 
 ---
 
